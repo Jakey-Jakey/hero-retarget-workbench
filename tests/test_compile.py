@@ -6,6 +6,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 from forge.compile import compile_stage
+from forge.hashes import blake3_hex
 from forge.paths import Environment
 
 
@@ -31,7 +32,9 @@ class CompileStageTests(unittest.TestCase):
         (self.source / "models" / "heroes" / "haze" / "haze.vmdl").write_bytes(b"vmdl")
         (self.source / "models" / "heroes" / "haze" / "haze_body.dmx").write_bytes(b"dmx")
         (self.source / "stage.json").write_text(
-            json.dumps({"vmdl": "models/heroes/haze/haze.vmdl"}),
+            json.dumps(
+                {"vmdl": "models/heroes/haze/haze.vmdl", "vmdl_blake3": blake3_hex(b"vmdl")}
+            ),
             encoding="utf-8",
         )
         self.env = Environment(
